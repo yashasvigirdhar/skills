@@ -8,11 +8,10 @@ Follow these steps in order. Ask the user for input only when you can't infer th
 
 Before starting, verify these are available:
 
-1. **Claude Code CLI** — the user is running this through Claude Code (they are, since you're reading this)
-2. **Chrome DevTools MCP** — check if `.mcp.json` in the project root (or `~/.claude/`) has a `chrome-devtools` server configured
-   - If not found: tell the user they need to set up the Chrome DevTools MCP server and link them to https://github.com/anthropics/claude-code — stop here until resolved
-3. **Git repo** — verify the project directory is a git repository
-4. **Database** — check if the project uses a database (look for ORM configs, migration files, connection strings). Note the DB type (PostgreSQL, MySQL, SQLite, etc.)
+1. **Chrome DevTools MCP** — check if the project or user has a Chrome DevTools MCP server configured (look for `chrome-devtools` in `.mcp.json`, MCP config files, or equivalent)
+   - If not found: tell the user they need to set up the Chrome DevTools MCP server and stop here until resolved
+2. **Git repo** — verify the project directory is a git repository
+3. **Database** — check if the project uses a database (look for ORM configs, migration files, connection strings). Note the DB type (PostgreSQL, MySQL, SQLite, etc.)
 
 ## Step 2: Discover the Project
 
@@ -125,33 +124,28 @@ Based on the auth mechanism, write the specific commands to create test sessions
 
 ## Step 5: Install the Skill
 
-```bash
-# Create the scheduled task directory
-mkdir -p ~/.claude/scheduled-tasks/nightly-qa
+Save the generated SKILL.md to wherever the user's agent reads skill files from. Common locations:
+- `~/.claude/scheduled-tasks/nightly-qa/SKILL.md` (Claude Code)
+- The project's `.agent/skills/` directory
+- Wherever the user specifies
 
-# Write the generated SKILL.md
-# (use the Write tool to create ~/.claude/scheduled-tasks/nightly-qa/SKILL.md)
-```
+Also copy the `references/` directory alongside the SKILL.md — it contains gotchas that the skill references during runs.
 
-Also create the report directory in the project:
+Create the report directory in the project:
 ```bash
 mkdir -p <PROJECT_ROOT>/<REPORT_DIR>
 ```
 
 ## Step 6: Schedule It
 
-Ask the user what time they'd like it to run, then set up the schedule.
-
-The scheduling mechanism depends on the user's Claude Code version:
-- If `claude schedule` is available: `claude schedule add --name nightly-qa --cron "0 22 * * *"`
-- Otherwise: guide the user to set it up manually via crontab or their preferred scheduler
+Ask the user what time they'd like it to run, then help them set up the schedule using their agent's scheduling mechanism (cron, built-in scheduler, or equivalent).
 
 ## Step 7: Verify
 
 Do a dry run of the pre-flight checks to make sure everything works:
 
 1. Check that dev servers are reachable on the configured ports
-2. Verify Chrome DevTools MCP tools are available (`list_pages` should work)
+2. Verify Chrome DevTools MCP tools are available (try `list_pages`)
 3. Create and immediately delete a test record to verify DB access and cleanup
 4. Create the first (empty) report file to verify the report directory is writable
 

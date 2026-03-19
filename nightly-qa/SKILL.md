@@ -1,13 +1,17 @@
 ---
 name: nightly-qa
-description: Nightly E2E QA tests on local dev servers via Chrome DevTools MCP, with progressive reporting and self-improving learnings
+description: Automated E2E browser testing via Chrome DevTools MCP. Runs nightly against local dev servers — checks console errors, network requests, DOM state. Writes checkpoint reports, fixes bugs, opens PRs, and improves itself after each run. Use when setting up recurring QA testing for a web application.
+compatibility: Requires Chrome DevTools MCP server, a browser, and local dev servers (frontend + backend). Database access needed for test data cleanup.
+metadata:
+  author: yashasvigirdhar
+  version: "1.0"
 ---
 
 # Nightly QA — E2E Browser Tests
 
-You run automated QA tests against the local dev environment using Chrome DevTools MCP tools (`mcp__chrome-devtools__*`). Tests cover the flows defined in the **Test Flows** section below.
+You run automated QA tests against the local dev environment using Chrome DevTools MCP tools. Tests cover the flows defined in the **Test Flows** section below.
 
-**Key principle — MANDATORY checkpointing**: After EVERY SINGLE test step, you MUST immediately append the result to the report file using the Write/Edit tool. Do NOT batch results. Do NOT hold results in memory to write later. The report file is your checkpoint — if context compresses mid-run, you can read it back to see what you've already done. Treat each write as a save point. If you lose context, `Read` the report file to recover your position and continue from the next untested step.
+**Key principle — MANDATORY checkpointing**: After EVERY SINGLE test step, you MUST immediately append the result to the report file. Do NOT batch results. Do NOT hold results in memory to write later. The report file is your checkpoint — if context compresses mid-run, you can read it back to see what you've already done. Treat each write as a save point. If you lose context, read the report file to recover your position and continue from the next untested step.
 
 ## Configuration
 
@@ -15,14 +19,13 @@ Before using this skill, set these values for your project:
 
 | Variable | Description | Example |
 |---|---|---|
-| `PROJECT_ROOT` | Absolute path to your project | `/Users/you/Projects/myapp` |
+| `PROJECT_ROOT` | Absolute path to your project | `/home/you/projects/myapp` |
 | `FRONTEND_PORT` | Port your frontend dev server runs on | `3000` |
 | `BACKEND_PORT` | Port your backend dev server runs on | `8000` |
 | `BASE_URL` | URL used for browser testing | `http://localhost:3000` |
 | `REPORT_DIR` | Where QA reports are saved (relative to project root) | `docs/testing/nightly-qa-reports` |
 | `TMUX_SESSION` | Name of the tmux session running dev servers | `devservers` |
-| `VENV_PATH` | Path to Python venv (if applicable) | `$PROJECT_ROOT/.venv` |
-| `AUTH_SETUP_CMD` | Command to create test auth sessions (if applicable) | `python -m scripts.dev_create_session --user-type admin` |
+| `AUTH_SETUP_CMD` | Command to create test auth sessions (if applicable) | `python -m scripts.create_session --user-type admin` |
 | `TEST_DATA_PREFIX` | Prefix for QA-created test data (for cleanup) | `[QA-NIGHTLY]` |
 | `TEST_EMAIL_DOMAIN` | Non-routable email domain for test accounts | `test.local` |
 
@@ -153,9 +156,6 @@ After EACH test step, immediately append the result to this file:
 If your app requires authentication for testing, create sessions before running tests.
 
 ```bash
-# Example: create an auth session
-source VENV_PATH/bin/activate
-cd PROJECT_ROOT/backend
 AUTH_SETUP_CMD
 ```
 
@@ -182,11 +182,11 @@ When switching between user roles (e.g., admin → regular user), always clear o
 ```
 ### Phase N Complete — M/M passed
 ```
-Then **Read the report file back** to verify your checkpoint is persisted. This ensures that if context compresses during the next phase, you can recover by reading the report. Do NOT skip the read-back — it costs almost nothing and prevents losing an entire phase of results.
+Then **read the report file back** to verify your checkpoint is persisted. This ensures that if context compresses during the next phase, you can recover by reading the report. Do NOT skip the read-back — it costs almost nothing and prevents losing an entire phase of results.
 
-**Context recovery protocol**: If at any point you feel uncertain about what you've already tested (e.g., after context compression), STOP and Read the report file. It is the source of truth. Resume from the next untested step.
+**Context recovery protocol**: If at any point you feel uncertain about what you've already tested (e.g., after context compression), STOP and read the report file. It is the source of truth. Resume from the next untested step.
 
-**IMPORTANT — Be thorough, not lazy**: Each test below lists specific interactions and verifications. You MUST perform ALL of them, not just the first one or two. Skipping steps defeats the purpose of nightly QA. If a step fails, note it in the report and continue to the next step — do not skip remaining verifications just because one failed. The goal is to find ALL bugs per run, not stop at the first one.
+**Be thorough**: Each test below lists specific interactions and verifications. You MUST perform ALL of them, not just the first one or two. Skipping steps defeats the purpose of nightly QA. If a step fails, note it in the report and continue to the next step — do not skip remaining verifications just because one failed. The goal is to find ALL bugs per run, not stop at the first one.
 
 ---
 
@@ -345,12 +345,7 @@ If any test revealed a **code bug** (not an environment issue, not a test proced
    ```bash
    git checkout -b qa/nightly-fix-YYYY-MM-DD
    git add <fixed-files> REPORT_DIR/
-   git commit -m "$(cat <<'EOF'
-   Fix <short description> (found by nightly QA)
-
-   Co-Authored-By: Claude <noreply@anthropic.com>
-   EOF
-   )"
+   git commit -m "Fix <short description> (found by nightly QA)"
    gh pr create --title "Fix: <short description> (nightly QA YYYY-MM-DD)" --body "$(cat <<'EOF'
    ## Summary
    - Found by nightly QA run on YYYY-MM-DD
@@ -359,22 +354,15 @@ If any test revealed a **code bug** (not an environment issue, not a test proced
    ## Test plan
    - [ ] Verified fix passes in nightly QA re-run
    - [ ] No regressions in other test flows
-
-   🤖 Generated with [Claude Code](https://claude.com/claude-code)
    EOF
    )"
    git checkout main
    ```
 
-If **NO bugs found**:
+If **NO bugs found**, commit just the report:
 ```bash
 git add REPORT_DIR/
-git commit -m "$(cat <<'EOF'
-Add nightly QA report for YYYY-MM-DD — all tests passed
-
-Co-Authored-By: Claude <noreply@anthropic.com>
-EOF
-)"
+git commit -m "Nightly QA report YYYY-MM-DD — all tests passed"
 ```
 
 ## Self-Improvement
@@ -399,34 +387,4 @@ The goal: each run makes the next run smoother, more reliable, AND more comprehe
 
 _This section is maintained by the agent after each run. It captures reusable knowledge that improves future test execution. Each entry should include the date it was learned and why it matters._
 
-### Chrome DevTools MCP — General
-
-1. **Cookie injection on `lvh.me`**: Set cookies with `path=/` only. Adding `domain=.lvh.me` causes silent failure — cookies are not stored. Omit the domain parameter entirely. (If you use `localhost` instead, this doesn't apply.)
-
-2. **CSRF cookie conflicts when switching sessions**: Auth flows (like signup) may set their own CSRF cookies. When switching to a different session, the old CSRF cookie persists alongside the new one, causing 403 errors. Fix: clear CSRF cookies across all domain/path combos before injecting new session cookies.
-
-3. **React controlled input fill**: The Chrome DevTools `fill` tool sets the DOM value but does NOT trigger React's onChange for controlled components. Buttons that depend on state (like "Save") stay disabled. Workaround:
-   ```javascript
-   // For input/textarea elements
-   const setter = Object.getOwnPropertyDescriptor(
-     window.HTMLTextAreaElement.prototype, 'value'
-   ).set;
-   setter.call(element, 'your text');
-   element.dispatchEvent(new Event('input', { bubbles: true }));
-   element.dispatchEvent(new Event('change', { bubbles: true }));
-   ```
-   If the above doesn't work (some React components don't respond to native events), invoke the React internal onChange directly:
-   ```javascript
-   const reactPropsKey = Object.keys(element).find(k => k.startsWith('__reactProps'));
-   element[reactPropsKey].onChange({ target: { value: 'your text' } });
-   ```
-
-4. **Session expiry during long runs**: Auth sessions can expire mid-run. If a navigation redirects to the login page unexpectedly, re-create the session and re-inject cookies. Plan for this in long test suites.
-
-5. **Tab navigation**: Clicking tab elements doesn't always trigger navigation. If the URL doesn't change after clicking a tab, navigate directly via URL instead.
-
-6. **Context window management**: Long runs (20+ tests + cleanup) can exceed context limits. Write results to the report after EVERY test, not in batches. This prevents data loss when context compacts.
-
-7. **Psql batch mode rolls back on error**: A single `psql -c` with multiple statements wrapped in an implicit transaction will roll back ALL statements if ANY one fails. For cleanup reliability, either use separate `psql -c` calls per statement or use `ON_ERROR_ROLLBACK=on`.
-
-8. **Pages opening in new tabs**: Some actions (like "Preview") open content in a new browser tab. Use `list_pages` to discover the new tab, `select_page` to switch to it, then `close_page` when done.
+Refer to [references/chrome-devtools-gotchas.md](references/chrome-devtools-gotchas.md) for common Chrome DevTools MCP pitfalls (cookie injection, React controlled inputs, session management, context window tips).
