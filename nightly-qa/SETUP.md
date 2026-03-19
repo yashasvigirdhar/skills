@@ -11,7 +11,9 @@ Before starting, verify these are available:
 1. **Chrome DevTools MCP** — check if the project or user has a Chrome DevTools MCP server configured (look for `chrome-devtools` in `.mcp.json`, MCP config files, or equivalent)
    - If not found: tell the user they need to set up the Chrome DevTools MCP server and stop here until resolved
 2. **Git repo** — verify the project directory is a git repository
-3. **Database** — check if the project uses a database (look for ORM configs, migration files, connection strings). Note the DB type (PostgreSQL, MySQL, SQLite, etc.)
+3. **gh CLI** — verify `gh` is installed (`gh --version`). Needed for creating PRs when bugs are found.
+   - If not found: tell the user to install it (https://cli.github.com) or note that the PR creation step will need to be done manually
+4. **Database** — check if the project uses a database (look for ORM configs, migration files, connection strings). Note the DB type (PostgreSQL, MySQL, SQLite, etc.)
 
 ## Step 2: Discover the Project
 

@@ -1,7 +1,7 @@
 ---
 name: nightly-qa
 description: Automated E2E browser testing via Chrome DevTools MCP. Runs nightly against local dev servers — checks console errors, network requests, DOM state. Writes checkpoint reports, fixes bugs, opens PRs, and improves itself after each run. Use when setting up recurring QA testing for a web application.
-compatibility: Requires Chrome DevTools MCP server, a browser, and local dev servers (frontend + backend). Database access needed for test data cleanup.
+compatibility: Requires Chrome DevTools MCP server, a browser, local dev servers (frontend + backend), git, and gh CLI (for PR creation). Database access needed for test data cleanup.
 metadata:
   author: yashasvigirdhar
   version: "1.0"
