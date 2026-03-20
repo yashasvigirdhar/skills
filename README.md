@@ -1,6 +1,6 @@
 # Agent Skills
 
-Reusable [Agent Skills](https://agentskills.io) — portable instructions that give AI agents new capabilities and expertise.
+Reusable [Agent Skills](https://agentskills.io) — portable instructions that give AI agents new capabilities and expertise. These are skills I use in my daily workflow, vetted over several weeks of real usage before being generalized and shared here.
 
 Works with any skills-compatible agent: Claude Code, Cursor, Copilot, Gemini CLI, Goose, Roo Code, Amp, and [others](https://agentskills.io/home).
 
