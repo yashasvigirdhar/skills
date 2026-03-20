@@ -138,9 +138,9 @@ Create the report directory in the project:
 mkdir -p <PROJECT_ROOT>/<REPORT_DIR>
 ```
 
-## Step 6: Schedule It
+## Step 6: Schedule It (Optional)
 
-Ask the user what time they'd like it to run, then help them set up the schedule using their agent's scheduling mechanism (cron, built-in scheduler, or equivalent).
+Ask the user if they'd like to run this on a recurring schedule. If so, help them set it up using their agent's scheduling mechanism (cron, built-in scheduler, or equivalent). This step is optional — the skill works equally well when invoked manually.
 
 ## Step 7: Verify
 
@@ -155,6 +155,6 @@ Report the results to the user. If everything passes, the skill is ready for its
 
 ## Step 8: First Run (Optional)
 
-Ask the user: "Want me to do a first run now to validate the full test suite, or wait for the scheduled time?"
+Ask the user: "Want me to do a first run now to validate the full test suite?"
 
 If they want a first run, execute the SKILL.md you just installed.
