@@ -21,9 +21,8 @@ Before using this skill, set these values for your project:
 | Variable | Description | Example |
 |---|---|---|
 | `PROJECT_ROOT` | Absolute path to your project | `/home/you/projects/myapp` |
-| `FRONTEND_PORT` | Port your frontend dev server runs on | `3000` |
-| `BACKEND_PORT` | Port your backend dev server runs on | `8000` |
 | `BASE_URL` | URL used for browser testing | `http://localhost:3000` |
+| `BACKEND_PORT` | Port your backend/API server runs on | `8000` |
 | `REPORT_DIR` | Where QA reports are saved (relative to project root) | `docs/testing/nightly-qa-reports` |
 | `TMUX_SESSION` | Name of the tmux session running dev servers | `devservers` |
 | `AUTH_SETUP_CMD` | Command to create test auth sessions (if applicable) | `python -m scripts.create_session --user-type admin` |
