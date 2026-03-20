@@ -18,7 +18,7 @@ The agent will explore your codebase, ask you a few targeted questions, generate
 
 | Skill | What it does |
 |---|---|
-| [`nightly-qa`](./nightly-qa/) | Automated E2E browser testing via Chrome DevTools MCP. Writes checkpoint reports, fixes bugs, opens PRs, and learns from each run. |
+| [`nightly-qa`](./nightly-qa/) | Human-like E2E browser testing that gets smarter with each run. Opens a real browser, clicks through your app's flows, checks for errors — agnostic of your tech stack. Analyzes git diffs to discover new changes, writes checkpoint reports, fixes bugs, and opens PRs. |
 
 ## How It Works
 
