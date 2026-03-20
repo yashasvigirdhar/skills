@@ -127,7 +127,8 @@ Based on the auth mechanism, write the specific commands to create test sessions
 ## Step 5: Install the Skill
 
 Save the generated SKILL.md to wherever the user's agent reads skill files from. Common locations:
-- `~/.claude/scheduled-tasks/nightly-qa/SKILL.md` (Claude Code)
+- `<PROJECT_ROOT>/.claude/skills/nightly-qa/SKILL.md` (Claude Code — project skill)
+- `~/.claude/scheduled-tasks/nightly-qa/SKILL.md` (Claude Code — scheduled task)
 - The project's `.agent/skills/` directory
 - Wherever the user specifies
 
