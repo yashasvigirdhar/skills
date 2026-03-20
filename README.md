@@ -18,7 +18,7 @@ The agent will explore your codebase, ask you a few targeted questions, generate
 
 | Skill | What it does |
 |---|---|
-| [`nightly-qa`](./nightly-qa/) | Human-like E2E browser testing that gets smarter with each run. Opens a real browser, clicks through your app's flows, checks for errors — agnostic of your tech stack. Analyzes git diffs to discover new changes, writes checkpoint reports, fixes bugs, and opens PRs. |
+| [`nightly-qa`](./nightly-qa/) | Human-like E2E browser testing that gets smarter with each run. Opens a real browser, clicks through your app's flows, checks for errors — agnostic of your tech stack. Analyzes git diffs to discover new changes, writes checkpoint reports, fixes bugs it discovers, and opens PRs for them. |
 
 ## How It Works
 
