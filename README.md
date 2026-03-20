@@ -36,7 +36,7 @@ nightly-qa/
 - **`SKILL.md`** — The generalized skill template. Contains the framework (checkpointing, change analysis, self-improvement) with example test flows. The setup agent uses this as the base and fills in your project-specific details.
 - **`references/`** — Detailed reference material loaded on demand during runs ([progressive disclosure](https://agentskills.io/what-are-skills#how-skills-work)).
 
-After setup, the installed skill can be invoked on demand or scheduled to run automatically (if your agent supports it). It improves itself after each run — learning from failures, adapting to code changes, and growing its test coverage over time.
+After setup, the installed skill can be invoked on demand or run as a recurring task via cron, Claude Code scheduled tasks, or any similar scheduling mechanism your agent supports. It improves itself after each run — learning from failures, adapting to code changes, and growing its test coverage over time.
 
 ## Contributing
 
