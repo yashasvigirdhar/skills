@@ -19,22 +19,23 @@ The agent will explore your codebase, ask you a few targeted questions, generate
 | Skill | What it does |
 |---|---|
 | [`nightly-qa`](./nightly-qa/) | Human-like E2E browser testing that gets smarter with each run. Opens a real browser, clicks through your app's flows, checks for errors — agnostic of your tech stack. Analyzes git diffs to discover new changes, writes checkpoint reports, fixes bugs it discovers, and opens PRs for them. |
+| [`competitor-backlink-audit`](./competitor-backlink-audit/) | Competitive SEO backlink analysis using the free Ahrefs Backlink Checker via a real browser. On first run, discovers your competitors automatically. Extracts DR, backlink profiles, and linking domains for each competitor, then generates an actionable report with link-building opportunities. No Ahrefs account needed. |
 
 ## How It Works
 
 Each skill directory follows the [Agent Skills specification](https://agentskills.io/specification):
 
 ```
-nightly-qa/
-├── SKILL.md                # Skill template — framework + example test flows
+skill-name/
+├── SKILL.md                # Skill template — the core instructions
 ├── SETUP.md                # Agent-readable setup instructions
 └── references/             # Supplementary docs loaded on demand
-    └── chrome-devtools-gotchas.md
 ```
 
 - **`SETUP.md`** — Point your agent here. It reads your codebase, asks targeted questions, and generates a customized SKILL.md for your project.
-- **`SKILL.md`** — The generalized skill template. Contains the framework (checkpointing, change analysis, self-improvement) with example test flows. The setup agent uses this as the base and fills in your project-specific details.
+- **`SKILL.md`** — The generalized skill template. Contains the framework and workflow with example content. The setup agent uses this as the base and fills in your project-specific details.
 - **`references/`** — Detailed reference material loaded on demand during runs ([progressive disclosure](https://agentskills.io/what-are-skills#how-skills-work)).
+- **`config.json`** — Created on first run (not during setup). The skill explores your project, asks you to confirm its findings, and writes the config. This keeps setup fast and config accurate.
 
 After setup, the installed skill can be invoked on demand or run as a recurring task via cron, Claude Code scheduled tasks, or any similar scheduling mechanism your agent supports. It improves itself after each run — learning from failures, adapting to code changes, and growing its test coverage over time.
 
