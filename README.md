@@ -20,6 +20,7 @@ The agent will explore your codebase, ask you a few targeted questions, generate
 |---|---|
 | [`nightly-qa`](./nightly-qa/) | Human-like E2E browser testing that gets smarter with each run. Opens a real browser, clicks through your app's flows, checks for errors — agnostic of your tech stack. Analyzes git diffs to discover new changes, writes checkpoint reports, fixes bugs it discovers, and opens PRs for them. |
 | [`competitor-backlink-audit`](./competitor-backlink-audit/) | Competitive SEO backlink analysis using the free Ahrefs Backlink Checker via a real browser. On first run, discovers your competitors automatically. Extracts DR, backlink profiles, and linking domains for each competitor, then generates an actionable report with link-building opportunities. No Ahrefs account needed. |
+| [`competitor-pricing-tracker`](./competitor-pricing-tracker/) | Track and monitor competitor pricing with automatic staleness detection. On first run, explores your codebase to understand the product, discovers competitors via web research, confirms them interactively, then builds a structured pricing database with tiers, add-ons, feature gating, and overage rates. Subsequent runs re-scrape stale entries and surface changes. |
 
 ## How It Works
 
