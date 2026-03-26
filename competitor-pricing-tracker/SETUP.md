@@ -1,51 +1,38 @@
-# Competitor Pricing Tracker — Setup
+# Competitor Pricing Tracker — Setup Guide
 
-## Prerequisites
+You are setting up a competitor pricing tracker skill for the user's project. This skill discovers competitors via web research, builds a structured pricing database, and keeps it up to date by re-scraping stale entries on subsequent runs.
 
-- An AI coding agent with **web search** and **web fetch** capabilities (needed to discover competitors and scrape pricing pages)
-- A codebase with enough context to identify what the product is (README, docs, landing page, etc.)
+Follow these steps in order.
 
-## Installation
+## Step 1: Prerequisites Check
 
-1. **Copy the skill files** into your project's skills directory:
+1. **Web search + web fetch** — verify you have access to `WebSearch` and `WebFetch` tools (or equivalent). These are required to discover competitors and scrape pricing pages.
+   - If not available: tell the user this skill requires web access and stop here until resolved
+2. **Git repo** — verify the project directory is a git repository
 
-   ```bash
-   # For Claude Code (adjust path for other agents)
-   mkdir -p .claude/skills/competitor-pricing-tracker/references
-   ```
+## Step 2: Install the Skill
 
-2. **Copy these files** into the created directory:
-   - `SKILL.md` → `.claude/skills/competitor-pricing-tracker/SKILL.md`
-   - `references/data-model.md` → `.claude/skills/competitor-pricing-tracker/references/data-model.md`
+Save the SKILL.md and `references/` directory to the project's skill directory. Common locations:
+- `<PROJECT_ROOT>/.claude/skills/competitor-pricing-tracker/` (Claude Code)
+- The project's `.agent/skills/` directory
+- Wherever the user specifies
 
-3. **Register the skill** with your agent if required (Claude Code auto-discovers skills in `.claude/skills/`).
+```bash
+mkdir -p <install_path>/references
+cp SKILL.md <install_path>/SKILL.md
+cp references/data-model.md <install_path>/references/data-model.md
+```
 
-## First Run
+**Do NOT create config.json** — the skill creates it on first run after exploring the codebase, researching competitors, and confirming them with the user. This ensures the competitor list is informed by actual research, not guesses.
 
-No manual configuration needed — the skill bootstraps itself interactively on first run:
+## Step 3: First Run (Optional)
 
-1. Explores your codebase to understand your product
-2. Web searches for competitors in your space
-3. Asks you to confirm/edit the competitor list
-4. Defines feature comparison keys relevant to your industry
-5. Researches pricing for each competitor
-6. Writes the pricing data file and a `config.json`
+Ask the user: "Want me to do a first run now? I'll explore your product, research competitors, and build the pricing database."
 
-To trigger the first run, invoke the skill (e.g., `/verify-competitor-pricing` in Claude Code or ask your agent to "check competitor pricing").
-
-## What Gets Created
-
-After the first run:
-
-| File | Location | Purpose |
-|---|---|---|
-| `config.json` | Skill directory | Product info, data file path, freshness thresholds |
-| `competitor-pricing-data.json` | Your docs directory (chosen during setup) | The full structured pricing database |
-| `runs.log` | Skill directory | Run history for the self-improvement loop |
-
-## Customization
-
-- **Freshness thresholds**: Edit `config.json` → `freshnessThresholds` to change when entries are considered stale (default: 30 days) or very stale (default: 90 days)
-- **Data file location**: Chosen during bootstrap. Move it later by updating `config.json` → `dataFilePath`
-- **Adding competitors**: Edit the data file directly to add new platforms, or delete `config.json` and re-run the bootstrap
-- **Feature keys**: Add new keys to all platform entries in the data file — the skill will pick them up on the next run
+If they want a first run, execute the installed SKILL.md. The First Run Bootstrap section will handle:
+1. Understanding the product from the codebase
+2. Discovering and confirming competitors with the user
+3. Defining feature comparison keys for the industry
+4. Researching pricing for each competitor
+5. Choosing where to store the data file
+6. Creating `config.json` and the pricing database
