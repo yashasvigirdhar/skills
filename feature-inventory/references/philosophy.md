@@ -40,6 +40,24 @@ A changelog between two releases is a diff of the inventory. A coverage matrix i
 
 The inventory isn't directly useful as auto-generated output — it's a substrate other tools can build on.
 
+### 5. Incident triage requires tracing code paths under pressure
+
+"The `/billing/*` endpoints are returning 500s — what user-facing features are broken?" Without an inventory, answering this means reading router files, tracing imports, and guessing at blast radius while the incident clock ticks. With an inventory, it's a grep for `api_endpoints` containing `/billing/` — you immediately know which features are affected, whether they have fallbacks, and what status they're in.
+
+This is different from coverage gaps (#2). Coverage asks "what's untested?" Blast radius asks "what's on fire and how big is the fire?" Both need the same cross-referencing structure, but the urgency and the audience are different.
+
+### 6. Feature flag rot accumulates silently
+
+Flags get turned on and never cleaned up. A feature shipped behind `new_checkout_flow` six months ago is now just "checkout" — but the flag still exists in the code, the if/else branches still complicate every reader's mental model, and nobody remembers whether it's safe to remove.
+
+An inventory with `feature_flag` fields makes this visible. Any entry where `status: ga` and `feature_flag` is non-null is a candidate for flag cleanup. Without the inventory, discovering these requires cross-referencing the flags table against deployment history — a task nobody does until the flag count is already painful.
+
+### 7. AI agents burn tokens rediscovering what should be a file read
+
+An agent asked to modify a feature needs to answer several questions before writing any code: what endpoints does this feature touch? What's its frontend route? Is it behind a flag? Does it have tests? Are there docs to update?
+
+Without an inventory, the agent explores the codebase to answer each question — reading router files, grepping for test files, checking flag definitions. This exploration consumes tokens, takes time, and risks missing things. With an inventory, the agent reads one file and has a complete map of the feature's surface area. As AI agents become the primary way code gets modified, the inventory becomes less of a nice-to-have documentation artifact and more of a core piece of development infrastructure.
+
 ## Design decisions
 
 ### Why YAML?
