@@ -53,23 +53,6 @@ Bootstrap creates a new `config.json` and a new `inventory.yaml` from scratch. I
 
 > Bootstrap requires a user at the confirmation gate. Run this skill interactively the first time to create `config.json` and `inventory.yaml`, then schedule drift-sync for subsequent runs.
 
-**Check 2 — Existing inventory.** Use `Glob` to search for any existing inventory file in the project:
-
-```
-**/inventory.yaml
-**/feature-inventory.yaml
-docs/feature-inventory/*.yaml
-```
-
-If any file looks like an existing feature inventory (contains a list of entries with `id` and `name` fields), stop and report:
-
-> An inventory file already exists at `<path>`. This skill's bootstrap mode assumes a clean slate and will not overwrite. Two options:
->
-> 1. Remove the existing file and rerun bootstrap.
-> 2. Keep the existing file, hand-write `config.json` in this skill directory to match your current schema (see `references/schema.md`), then rerun — the skill will detect `config.json` and switch to drift-sync mode.
-
-Do not proceed with bootstrap if either check fails.
-
 ### Step 1: Explore the project
 
 Read in this order:
@@ -327,7 +310,6 @@ Print a one-line summary of what was detected and what action was taken.
 - **Static route parsing has blind spots.** Dynamically registered routes (loop-based, meta-programming) may not be detected. For frameworks that support it, prefer runtime introspection during drift-sync.
 - **Third-party feature flag services are opaque.** If flags live in PostHog, LaunchDarkly, etc., the skill can only track them by name — it cannot verify they still exist in the service. Configure `config.stack.flag_service` to skip the local file check.
 - **No multi-file inventory support.** For projects with 500+ features, the single-file approach will become strained. Not currently supported.
-- **Bootstrap refuses to overwrite existing inventory files.** This is intentional — it prevents silent clobbering of hand-curated data. Use the "hand-write config.json" escape hatch described in `SETUP.md` if you want to adopt the skill in a project that already has an inventory.
 
 ## After the Run
 

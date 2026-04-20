@@ -30,26 +30,7 @@ cp references/philosophy.md <install_path>/references/philosophy.md
 
 **Do NOT create `config.json`** — the skill creates it on first run after exploring the project, proposing a schema, and getting the user's approval at the bootstrap confirmation gate. This ensures the schema is informed by the actual codebase, not a guess.
 
-## Step 3: Adopting the Skill in a Project That Already Has an Inventory
-
-This is an important edge case. The bootstrap path **refuses to overwrite** an existing inventory file — it will error out during pre-flight checks if it detects one.
-
-If the target project already has a feature inventory (even one written by hand), the adoption path is:
-
-1. Do not run bootstrap. The pre-flight check will reject it.
-2. Hand-write `config.json` in the installed skill directory. See `references/schema.md` for the shape. You must provide at minimum:
-   - `inventory_path` — where the existing inventory file lives
-   - `tracked_fields` — which optional fields are populated in your existing entries
-   - `vocabularies.status` — the exact `status` values your entries use
-   - `vocabularies.personas` — the exact `personas` values your entries use (if the field is tracked)
-   - `discovery` — paths where the skill should look for routes, tests, flags, docs
-   - `stack.backend` and `stack.frontend` — framework names, used for drift-sync pattern matching
-   - `auto_commit` and `commit_message` — preferred commit behavior
-3. Run the skill. It will detect `config.json` and run in drift-sync mode immediately, reconciling the existing inventory against the code.
-
-Tell the user about this if they mention having an existing inventory.
-
-## Step 4: First Run (Optional)
+## Step 3: First Run (Optional)
 
 Ask the user: "Want me to do a first run now? I'll explore your project, propose a schema tailored to the detected stack, walk the code to draft initial feature entries, and present a single confirmation gate for you to approve or edit."
 
@@ -65,7 +46,7 @@ If they want a first run, execute the installed `SKILL.md`. The bootstrap workfl
 
 Bootstrap is **interactive-only**. The skill will fail its pre-flight check if invoked from a scheduled task or cron. Only drift-sync is safe to schedule.
 
-## Step 5: Scheduling (Optional)
+## Step 4: Scheduling (Optional)
 
 Once bootstrap is done, drift-sync can be scheduled to run periodically so the inventory stays in sync as the code evolves.
 
